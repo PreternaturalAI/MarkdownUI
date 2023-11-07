@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 struct BulletedListView: View {

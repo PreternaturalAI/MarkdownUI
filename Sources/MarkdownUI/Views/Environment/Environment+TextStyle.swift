@@ -35,7 +35,8 @@ extension View {
 }
 
 extension TextStyle {
-    @TextStyleBuilder fileprivate func appending<S: TextStyle>(
+    @TextStyleBuilder
+    fileprivate consuming func appending<S: TextStyle>(
         _ textStyle: S
     ) -> some TextStyle {
         self

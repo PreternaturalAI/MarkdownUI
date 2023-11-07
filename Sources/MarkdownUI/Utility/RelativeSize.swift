@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 /// Represents a relative size or length, such as a width, padding, or font size.

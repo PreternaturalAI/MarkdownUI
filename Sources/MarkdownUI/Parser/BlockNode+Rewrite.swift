@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import Foundation
 
 extension Sequence where Element == BlockNode {

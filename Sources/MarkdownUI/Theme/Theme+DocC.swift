@@ -1,4 +1,8 @@
-import SwiftUI
+//
+// Copyright (c) Vatsal Manot
+//
+
+import SwiftUIX
 
 extension Theme {
     /// A theme that mimics the DocC style.
@@ -107,6 +111,7 @@ extension Theme {
             .background(Color.codeBackground)
             .clipShape(.container)
             .markdownMargin(top: .em(0.8), bottom: .zero)
+            ._scrollBounceBehaviorBasedOnSizeIfAvailable()
         }
         .image { configuration in
             configuration.label
