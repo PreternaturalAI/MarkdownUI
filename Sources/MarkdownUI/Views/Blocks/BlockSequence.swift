@@ -9,7 +9,7 @@ struct BlockSequence<Data: RandomAccessCollection, Content>: View where Data.Ind
     @Environment(\.multilineTextAlignment) private var textAlignment
     @Environment(\.tightSpacingEnabled) private var tightSpacingEnabled
     
-    @State private var blockMargins: [Data.Index: BlockMargin] = [:]
+    @State private var blockMargins: [Data.Index: _BlockMargin] = [:]
     
     private let data: Data
     private let content: (Data.Index, Data.Element) -> Content
@@ -23,13 +23,17 @@ struct BlockSequence<Data: RandomAccessCollection, Content>: View where Data.Ind
     }
     
     var body: some View {
-        ForEach(data._enumerated(), id: \.index) { (index, element) in
+        ForEach(
+            Array(data._enumerated()),
+            id: \.0
+        ) { (index, element) in
             self.content(index, element)
                 .onPreferenceChange(BlockMarginsPreference.self) { value in
                     if self.blockMargins[index] != value {
                         self.blockMargins[index] = value
                     }
                 }
+                .preference(key: BlockMarginsPreference.self, value: .unspecified)
                 .padding(.top, self.topPaddingLength(for: element, at: index))
         }
     }
@@ -49,14 +53,16 @@ struct BlockSequence<Data: RandomAccessCollection, Content>: View where Data.Ind
         self.tightSpacingEnabled ? 0 : self.blockMargins[predecessor]?.bottom
         
         return [topSpacing, predecessorBottomSpacing]
-            .compactMap { $0 }
+            .compactMap({ $0 })
             .max()
     }
 }
 
 extension BlockSequence where Data == [BlockNode], Content == BlockNode {
     init(_ blocks: [BlockNode]) {
-        self.init(blocks) { $1 }
+        self.init(blocks) {
+            $1
+        }
     }
 }
 

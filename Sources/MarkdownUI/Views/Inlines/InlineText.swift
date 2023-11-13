@@ -59,3 +59,9 @@ struct InlineText: View {
         }
     }
 }
+
+extension InlineText: Equatable {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.inlines == rhs.inlines
+    }
+}

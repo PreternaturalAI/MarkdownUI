@@ -43,7 +43,9 @@ private struct TextInlineRenderer {
         self.attributes = attributes
     }
     
-    mutating func render<S: Sequence>(_ inlines: S) where S.Element == InlineNode {
+    mutating func render<S: Sequence>(
+        _ inlines: S
+    ) where S.Element == InlineNode {
         for inline in inlines {
             self.render(inline)
         }

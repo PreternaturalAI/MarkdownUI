@@ -34,7 +34,10 @@ extension BlockNode {
     }
     
     var isParagraph: Bool {
-        guard case .paragraph = self else { return false }
+        guard case .paragraph = self else {
+            return false
+        }
+        
         return true
     }
 }

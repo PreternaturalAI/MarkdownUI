@@ -31,6 +31,7 @@ struct TableCell: View {
             imageFlow
         } else {
             InlineText(self.cell.content)
+                .equatable()
         }
     }
 }

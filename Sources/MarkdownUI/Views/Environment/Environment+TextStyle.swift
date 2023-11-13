@@ -46,8 +46,11 @@ extension TextStyle {
 
 extension EnvironmentValues {
     fileprivate(set) var textStyle: TextStyle {
-        get { self[TextStyleKey.self] }
-        set { self[TextStyleKey.self] = newValue }
+        get {
+            self[TextStyleKey.self]
+        } set {
+            self[TextStyleKey.self] = newValue
+        }
     }
 }
 

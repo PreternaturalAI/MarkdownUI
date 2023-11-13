@@ -19,6 +19,7 @@ extension BlockNode: View {
                 CodeBlockView(fenceInfo: fenceInfo, content: content)
             case .htmlBlock(let content):
                 ParagraphView(content: content)
+                    .equatable()
             case .paragraph(let content):
                 ParagraphView(content: content)
             case .heading(let level, let content):

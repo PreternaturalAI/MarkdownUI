@@ -8,6 +8,10 @@ public struct Markdown: View {
     private let baseURL: URL?
     private let imageBaseURL: URL?
     
+    private var blocks: [BlockNode] {
+        self.content.blocks.filterImagesMatching(colorScheme: self.colorScheme)
+    }
+
     /// Creates a Markdown view from a Markdown content value.
     /// - Parameters:
     ///   - content: The Markdown content value.
@@ -15,7 +19,11 @@ public struct Markdown: View {
     ///              URLs absolute. The default is `nil`.
     ///   - imageBaseURL: The base URL to use when resolving Markdown image URLs. If this value is `nil`, the initializer will
     ///                   determine image URLs using the `baseURL` parameter. The default is `nil`.
-    public init(_ content: MarkdownContent, baseURL: URL? = nil, imageBaseURL: URL? = nil) {
+    public init(
+        _ content: MarkdownContent,
+        baseURL: URL? = nil,
+        imageBaseURL: URL? = nil
+    ) {
         self.content = content
         self.baseURL = baseURL
         self.imageBaseURL = imageBaseURL ?? baseURL
@@ -32,10 +40,6 @@ public struct Markdown: View {
         .environment(\.baseURL, self.baseURL)
         .environment(\.imageBaseURL, self.imageBaseURL)
     }
-    
-    private var blocks: [BlockNode] {
-        self.content.blocks.filterImagesMatching(colorScheme: self.colorScheme)
-    }
 }
 
 extension Markdown {
@@ -46,7 +50,11 @@ extension Markdown {
     ///              URLs absolute. The default is `nil`.
     ///   - imageBaseURL: The base URL to use when resolving Markdown image URLs. If this value is `nil`, the initializer will
     ///                   determine image URLs using the `baseURL` parameter. The default is `nil`.
-    public init(_ markdown: String, baseURL: URL? = nil, imageBaseURL: URL? = nil) {
+    public init(
+        _ markdown: String,
+        baseURL: URL? = nil,
+        imageBaseURL: URL? = nil
+    ) {
         self.init(MarkdownContent(markdown), baseURL: baseURL, imageBaseURL: imageBaseURL)
     }
 }

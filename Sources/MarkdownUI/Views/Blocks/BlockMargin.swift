@@ -2,13 +2,20 @@
 // Copyright (c) Vatsal Manot
 //
 
-import SwiftUI
+import SwiftUIX
+import SwiftUIZ
 
-struct BlockMargin: Equatable {
+@_ViewTrait
+public struct _BlockMargin: Equatable {
     var top: CGFloat?
     var bottom: CGFloat?
     
-    static let unspecified = BlockMargin()
+    static let unspecified = _BlockMargin()
+}
+
+@_ViewTraitKey(for: _BlockMargin.self, named: "_blockMargin")
+extension _ViewTraitKeys {
+    
 }
 
 extension View {
@@ -19,7 +26,9 @@ extension View {
     ///
     /// - Parameter top: The minimum relative top spacing to use when laying out this block
     ///                  together with other blocks.
-    public func markdownMargin(top: RelativeSize) -> some View {
+    public func markdownMargin(
+        top: RelativeSize
+    ) -> some View {
         self.markdownMargin(top: top, bottom: nil)
     }
     
@@ -30,7 +39,9 @@ extension View {
     ///
     /// - Parameter bottom: The minimum relative bottom spacing to use when laying out this
     ///                     block together with other blocks.
-    public func markdownMargin(bottom: RelativeSize) -> some View {
+    public func markdownMargin(
+        bottom: RelativeSize
+    ) -> some View {
         self.markdownMargin(top: nil, bottom: bottom)
     }
     
@@ -48,7 +59,10 @@ extension View {
     ///             together with other blocks. If you set the value to `nil`, MarkdownUI
     ///             uses the preferred maximum value of the child blocks or the system's
     ///             default padding amount if no preference has been set.
-    public func markdownMargin(top: RelativeSize?, bottom: RelativeSize?) -> some View {
+    public func markdownMargin(
+        top: RelativeSize?,
+        bottom: RelativeSize?
+    ) -> some View {
         TextStyleAttributesReader { attributes in
             self.markdownMargin(
                 top: top?.points(relativeTo: attributes.fontProperties),
@@ -64,7 +78,9 @@ extension View {
     ///
     /// - Parameter top: The minimum top spacing, given in points, to use when laying out this block
     ///                  together with other blocks.
-    public func markdownMargin(top: CGFloat) -> some View {
+    public func markdownMargin(
+        top: CGFloat
+    ) -> some View {
         self.markdownMargin(top: top, bottom: nil)
     }
     
@@ -75,7 +91,9 @@ extension View {
     ///
     /// - Parameter bottom: The minimum bottom spacing, given in points, to use when laying out this
     ///                     block together with other blocks.
-    public func markdownMargin(bottom: CGFloat) -> some View {
+    public func markdownMargin(
+        bottom: CGFloat
+    ) -> some View {
         self.markdownMargin(top: nil, bottom: bottom)
     }
     
@@ -93,20 +111,23 @@ extension View {
     ///             this block together with other blocks. If you set the value to `nil`,
     ///             MarkdownUI uses the preferred maximum value of the child blocks or
     ///             the system's default padding amount if no preference has been set.
-    public func markdownMargin(top: CGFloat?, bottom: CGFloat?) -> some View {
+    public func markdownMargin(
+        top: CGFloat?,
+        bottom: CGFloat?
+    ) -> some View {
         self.transformPreference(BlockMarginsPreference.self) { value in
-            let newValue = BlockMargin(top: top, bottom: bottom)
+            let newValue = _BlockMargin(top: top, bottom: bottom)
             
-            value.top = [value.top, newValue.top].compactMap { $0 }.max()
-            value.bottom = [value.bottom, newValue.bottom].compactMap { $0 }.max()
+            value.top = [value.top, newValue.top].compactMap({ $0 }).max()
+            value.bottom = [value.bottom, newValue.bottom].compactMap({ $0 }).max()
         }
     }
 }
 
 struct BlockMarginsPreference: PreferenceKey {
-    static let defaultValue: BlockMargin = .unspecified
+    static let defaultValue: _BlockMargin = .unspecified
     
-    static func reduce(value: inout BlockMargin, nextValue: () -> BlockMargin) {
+    static func reduce(value: inout _BlockMargin, nextValue: () -> _BlockMargin) {
         let newValue = nextValue()
         
         value.top = [value.top, newValue.top].compactMap({ $0 }).max()
