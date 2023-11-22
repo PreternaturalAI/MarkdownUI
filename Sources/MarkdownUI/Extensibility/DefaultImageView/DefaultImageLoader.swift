@@ -1,13 +1,13 @@
-import SwiftUI
+import SwiftUIX
 
 final class DefaultImageLoader {
     static let shared = DefaultImageLoader()
     
-    private let cache = NSCache<NSURL, PlatformImage>()
+    private let cache = NSCache<NSURL, AppKitOrUIKitImage>()
     
     private init() {}
     
-    func image(with url: URL, urlSession: URLSession) async throws -> PlatformImage {
+    func image(with url: URL, urlSession: URLSession) async throws -> AppKitOrUIKitImage {
         if let image = self.cache.object(forKey: url as NSURL) {
             return image
         }
@@ -20,7 +20,7 @@ final class DefaultImageLoader {
             throw URLError(.badServerResponse)
         }
         
-        guard let image = PlatformImage.decode(from: data) else {
+        guard let image = AppKitOrUIKitImage.decode(from: data) else {
             throw URLError(.cannotDecodeContentData)
         }
         
@@ -30,9 +30,9 @@ final class DefaultImageLoader {
     }
 }
 
-extension PlatformImage {
-    fileprivate static func decode(from data: Data) -> PlatformImage? {
-#if os(iOS) || os(tvOS) || os(watchOS)
+extension AppKitOrUIKitImage {
+    fileprivate static func decode(from data: Data) -> AppKitOrUIKitImage? {
+#if os(iOS) || os(tvOS) || os(visionOS) || os(watchOS)
         guard let image = UIImage(data: data) else {
             return nil
         }

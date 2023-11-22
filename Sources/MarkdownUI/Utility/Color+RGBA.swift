@@ -21,7 +21,7 @@ extension Color {
     ///   - light: The light appearance color value.
     ///   - dark: The dark appearance color value.
     public init(light: @escaping @autoclosure () -> Color, dark: @escaping @autoclosure () -> Color) {
-#if os(macOS)
+        #if os(macOS)
         self.init(
             nsColor: .init(name: nil) { appearance in
                 if appearance.bestMatch(from: [.aqua, .darkAqua]) == .aqua {
@@ -31,7 +31,7 @@ extension Color {
                 }
             }
         )
-#elseif os(iOS) || os(tvOS)
+        #elseif os(iOS) || os(tvOS) || os(visionOS)
         self.init(
             uiColor: .init { traitCollection in
                 switch traitCollection.userInterfaceStyle {
@@ -44,8 +44,8 @@ extension Color {
                 }
             }
         )
-#elseif os(watchOS)
+        #elseif os(watchOS)
         self = dark()
-#endif
+        #endif
     }
 }

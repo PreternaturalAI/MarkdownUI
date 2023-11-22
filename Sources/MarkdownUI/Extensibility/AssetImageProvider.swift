@@ -1,4 +1,4 @@
-import SwiftUI
+import SwiftUIX
 
 /// An image provider that loads images from resources located in an app or a module.
 ///
@@ -31,20 +31,20 @@ public struct AssetImageProvider: ImageProvider {
     public func makeImage(url: URL?) -> some View {
         if let url = url, let image = self.image(url: url) {
             ResizeToFit(idealSize: image.size) {
-                Image(platformImage: image)
+                Image(image: image)
                     .resizable()
             }
         }
     }
     
-    private func image(url: URL) -> PlatformImage? {
+    private func image(url: URL) -> AppKitOrUIKitImage? {
 #if os(macOS)
         if let bundle, bundle != .main {
             return bundle.image(forResource: self.name(url))
         } else {
             return NSImage(named: self.name(url))
         }
-#elseif os(iOS) || os(tvOS) || os(watchOS)
+#elseif os(iOS) || os(tvOS) || os(visionOS) || os(watchOS) 
         return UIImage(named: self.name(url), in: self.bundle, with: nil)
 #endif
     }

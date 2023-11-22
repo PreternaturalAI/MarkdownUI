@@ -12,7 +12,7 @@ public struct DefaultInlineImageProvider: InlineImageProvider {
     
     public func image(with url: URL, label: String) async throws -> Image {
         try await Image(
-            platformImage: DefaultImageLoader.shared
+            image: DefaultImageLoader.shared
                 .image(with: url, urlSession: self.urlSession)
         )
     }
