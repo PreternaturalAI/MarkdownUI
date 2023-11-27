@@ -3,7 +3,9 @@ import SwiftUI
 extension View {
     /// Sets the current ``Theme`` for the Markdown contents in a view hierarchy.
     /// - Parameter theme: The theme to set.
-    public func markdownTheme(_ theme: Theme) -> some View {
+    public func markdownTheme(
+        _ theme: Theme
+    ) -> some View {
         self.environment(\.theme, theme)
     }
     
