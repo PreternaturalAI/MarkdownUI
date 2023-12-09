@@ -27,7 +27,7 @@ extension View {
         }
     }
     
-    func textStyle(_ textStyle: TextStyle) -> some View {
+    func textStyle(_ textStyle: any TextStyle) -> some View {
         self.transformEnvironment(\.textStyle) {
             $0 = $0.appending(textStyle)
         }
@@ -45,7 +45,7 @@ extension TextStyle {
 }
 
 extension EnvironmentValues {
-    fileprivate(set) var textStyle: TextStyle {
+    fileprivate(set) var textStyle: any TextStyle {
         get {
             self[TextStyleKey.self]
         } set {
@@ -55,5 +55,5 @@ extension EnvironmentValues {
 }
 
 private struct TextStyleKey: EnvironmentKey {
-    static let defaultValue: TextStyle = FontProperties()
+    static let defaultValue: any TextStyle = FontProperties()
 }

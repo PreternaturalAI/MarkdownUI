@@ -103,10 +103,10 @@ private struct TextInlineRenderer {
         }
     }
     
-    private mutating func defaultRender(_ inline: InlineNode) {
-        self.result =
-        self.result
-        + Text(
+    private mutating func defaultRender(
+        _ inline: InlineNode
+    ) {
+        self.result = self.result + Text(
             inline.renderAttributedString(
                 baseURL: self.baseURL,
                 textStyles: self.textStyles,

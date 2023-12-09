@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 @available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *)
@@ -8,7 +12,10 @@ struct TableView: View {
     private let columnAlignments: [RawTableColumnAlignment]
     private let rows: [RawTableRow]
     
-    init(columnAlignments: [RawTableColumnAlignment], rows: [RawTableRow]) {
+    init(
+        columnAlignments: [RawTableColumnAlignment],
+        rows: [RawTableRow]
+    ) {
         self.columnAlignments = columnAlignments
         self.rows = rows
     }

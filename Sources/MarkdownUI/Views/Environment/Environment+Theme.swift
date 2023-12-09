@@ -14,7 +14,7 @@ extension View {
     ///   - keyPath: The ``Theme`` key path to the text style to replace.
     ///   - textStyle: A text style builder that returns the new text style to use for the given key path.
     public func markdownTextStyle<S: TextStyle>(
-        _ keyPath: WritableKeyPath<Theme, TextStyle>,
+        _ keyPath: WritableKeyPath<Theme, any TextStyle>,
         @TextStyleBuilder textStyle: () -> S
     ) -> some View {
         self.environment((\EnvironmentValues.theme).appending(path: keyPath), textStyle())

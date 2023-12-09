@@ -57,6 +57,22 @@ import SwiftUI
 /// ```
 ///
 /// ![](CustomBlockquote)
-public protocol TextStyle {
+public protocol TextStyle: Equatable {
     func _collectAttributes(in attributes: inout AttributeContainer)
+}
+
+public struct AnyTextStyle: TextStyle {
+    private let base: any TextStyle
+    
+    public init(erasing x: any TextStyle) {
+        self.base = x
+    }
+    
+    public func _collectAttributes(in attributes: inout AttributeContainer) {
+        base._collectAttributes(in: &attributes)
+    }
+    
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.base.eraseToAnyEquatable() == rhs.base.eraseToAnyEquatable()
+    }
 }

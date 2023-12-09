@@ -15,7 +15,9 @@ extension InlineNode {
             textStyles: textStyles,
             attributes: attributes
         )
+        
         renderer.render(self)
+        
         return renderer.result.resolvingFonts()
     }
 }
@@ -28,7 +30,11 @@ private struct AttributedStringInlineRenderer {
     private var attributes: AttributeContainer
     private var shouldSkipNextWhitespace = false
     
-    init(baseURL: URL?, textStyles: InlineTextStyles, attributes: AttributeContainer) {
+    init(
+        baseURL: URL?,
+        textStyles: InlineTextStyles,
+        attributes: AttributeContainer
+    ) {
         self.baseURL = baseURL
         self.textStyles = textStyles
         self.attributes = attributes
@@ -59,11 +65,14 @@ private struct AttributedStringInlineRenderer {
         }
     }
     
-    private mutating func renderText(_ text: String) {
+    private mutating func renderText(
+        _ text: String
+    ) {
         var text = text
         
         if self.shouldSkipNextWhitespace {
             self.shouldSkipNextWhitespace = false
+            
             text = text.replacingOccurrences(of: "^\\s+", with: "", options: .regularExpression)
         }
         
@@ -149,9 +158,13 @@ private struct AttributedStringInlineRenderer {
 }
 
 extension TextStyle {
-    fileprivate func mergingAttributes(_ attributes: AttributeContainer) -> AttributeContainer {
+    fileprivate func mergingAttributes(
+        _ attributes: AttributeContainer
+    ) -> AttributeContainer {
         var newAttributes = attributes
+        
         self._collectAttributes(in: &newAttributes)
+        
         return newAttributes
     }
 }

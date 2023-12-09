@@ -101,22 +101,22 @@ import SwiftUI
 /// ```
 public struct Theme {
     /// The default text style.
-    public var text: TextStyle = EmptyTextStyle()
+    public var text: any TextStyle = EmptyTextStyle()
     
     /// The inline code style.
-    public var code: TextStyle = FontFamilyVariant(.monospaced)
+    public var code: any TextStyle = FontFamilyVariant(.monospaced)
     
     /// The emphasis style.
-    public var emphasis: TextStyle = FontStyle(.italic)
+    public var emphasis: any TextStyle = FontStyle(.italic)
     
     /// The strong style.
-    public var strong: TextStyle = FontWeight(.semibold)
+    public var strong: any TextStyle = FontWeight(.semibold)
     
     /// The strikethrough style.
-    public var strikethrough: TextStyle = StrikethroughStyle(.single)
+    public var strikethrough: any TextStyle = StrikethroughStyle(.single)
     
     /// The link style.
-    public var link: TextStyle = EmptyTextStyle()
+    public var link: any TextStyle = EmptyTextStyle()
     
     var headings = Array(
         repeating: BlockStyle<BlockConfiguration> { $0.label },

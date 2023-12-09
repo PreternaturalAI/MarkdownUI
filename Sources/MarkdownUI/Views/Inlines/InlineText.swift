@@ -1,6 +1,24 @@
-import SwiftUI
+//
+// Copyright (c) Vatsal Manot
+//
 
-struct InlineText: View {
+import SwiftUIX
+
+struct InlineText: Equatable, View {
+    private let inlines: [InlineNode]
+    
+    init(_ inlines: [InlineNode]) {
+        self.inlines = inlines
+    }
+    
+    var body: some View {
+        _CacheViewAgainstValue(inlines) {
+            _InlineText(inlines)
+        }
+    }
+}
+
+private struct _InlineText: View {
     @Environment(\.inlineImageProvider) private var inlineImageProvider
     @Environment(\.baseURL) private var baseURL
     @Environment(\.imageBaseURL) private var imageBaseURL
@@ -18,7 +36,7 @@ struct InlineText: View {
         TextStyleAttributesReader { attributes in
             self.inlines.renderText(
                 baseURL: self.baseURL,
-                textStyles: .init(
+                textStyles: InlineTextStyles(
                     code: self.theme.code,
                     emphasis: self.theme.emphasis,
                     strong: self.theme.strong,
@@ -57,11 +75,5 @@ struct InlineText: View {
             
             return inlineImages
         }
-    }
-}
-
-extension InlineText: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.inlines == rhs.inlines
     }
 }
