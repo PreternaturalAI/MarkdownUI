@@ -5,12 +5,18 @@
 import Foundation
 
 extension Sequence where Element == BlockNode {
-    func rewrite(_ r: (BlockNode) throws -> [BlockNode]) rethrows -> [BlockNode] {
-        try self.flatMap { try $0.rewrite(r) }
+    func rewrite(
+        _ r: (BlockNode) throws -> [BlockNode]
+    ) rethrows -> [BlockNode] {
+        try self.flatMap({ try $0.rewrite(r) })
     }
     
-    func rewrite(_ r: (InlineNode) throws -> [InlineNode]) rethrows -> [BlockNode] {
-        try self.flatMap { try $0.rewrite(r) }
+    func rewrite(
+        _ r: (
+            InlineNode
+        ) throws -> [InlineNode]
+    ) rethrows -> [BlockNode] {
+        try self.flatMap({ try $0.rewrite(r) })
     }
 }
 
