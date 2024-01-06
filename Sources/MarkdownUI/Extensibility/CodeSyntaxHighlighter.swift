@@ -1,4 +1,8 @@
-import SwiftUI
+//
+// Copyright (c) Vatsal Manot
+//
+
+import SwiftUIX
 
 /// A type that provides syntax highlighting to code blocks in a Markdown view.
 ///

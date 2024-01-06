@@ -1,3 +1,8 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
+import NukeUI
 import SwiftUIX
 
 final class DefaultImageLoader {

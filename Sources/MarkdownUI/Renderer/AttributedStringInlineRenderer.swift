@@ -5,12 +5,14 @@
 import Foundation
 
 extension InlineNode {
+    @_optimize(speed)
+    @_transparent
     func renderAttributedString(
         baseURL: URL?,
         textStyles: InlineTextStyles,
         attributes: AttributeContainer
     ) -> AttributedString {
-        var renderer = AttributedStringInlineRenderer(
+        let renderer = AttributedStringInlineRenderer(
             baseURL: baseURL,
             textStyles: textStyles,
             attributes: attributes
@@ -22,14 +24,20 @@ extension InlineNode {
     }
 }
 
-private struct AttributedStringInlineRenderer {
+@usableFromInline
+final class AttributedStringInlineRenderer {
     var result = AttributedString()
     
-    private let baseURL: URL?
-    private let textStyles: InlineTextStyles
-    private var attributes: AttributeContainer
-    private var shouldSkipNextWhitespace = false
+    @usableFromInline
+    let baseURL: URL?
+    @usableFromInline
+    let textStyles: InlineTextStyles
+    @usableFromInline
+    var attributes: AttributeContainer
+    @usableFromInline
+    var shouldSkipNextWhitespace = false
     
+    @usableFromInline
     init(
         baseURL: URL?,
         textStyles: InlineTextStyles,
@@ -40,7 +48,8 @@ private struct AttributedStringInlineRenderer {
         self.attributes = attributes
     }
     
-    mutating func render(_ inline: InlineNode) {
+    @_optimize(speed)
+    func render(_ inline: InlineNode) {
         switch inline {
             case .text(let content):
                 self.renderText(content)
@@ -65,7 +74,8 @@ private struct AttributedStringInlineRenderer {
         }
     }
     
-    private mutating func renderText(
+    @_optimize(speed)
+    func renderText(
         _ text: String
     ) {
         var text = text
@@ -79,7 +89,8 @@ private struct AttributedStringInlineRenderer {
         self.result += .init(text, attributes: self.attributes)
     }
     
-    private mutating func renderSoftBreak() {
+    @_optimize(speed)
+    func renderSoftBreak() {
         if self.shouldSkipNextWhitespace {
             self.shouldSkipNextWhitespace = false
         } else {
@@ -87,15 +98,18 @@ private struct AttributedStringInlineRenderer {
         }
     }
     
-    private mutating func renderLineBreak() {
+    @_optimize(speed)
+    func renderLineBreak() {
         self.result += .init("\n", attributes: self.attributes)
     }
     
-    private mutating func renderCode(_ code: String) {
+    @_optimize(speed)
+    func renderCode(_ code: String) {
         self.result += .init(code, attributes: self.textStyles.code.mergingAttributes(self.attributes))
     }
     
-    private mutating func renderHTML(_ html: String) {
+    @_optimize(speed)
+    func renderHTML(_ html: String) {
         let tag = HTMLTag(html)
         
         switch tag?.name.lowercased() {
@@ -107,7 +121,8 @@ private struct AttributedStringInlineRenderer {
         }
     }
     
-    private mutating func renderEmphasis(children: [InlineNode]) {
+    @_optimize(speed)
+    func renderEmphasis(children: [InlineNode]) {
         let savedAttributes = self.attributes
         self.attributes = self.textStyles.emphasis.mergingAttributes(self.attributes)
         
@@ -118,7 +133,8 @@ private struct AttributedStringInlineRenderer {
         self.attributes = savedAttributes
     }
     
-    private mutating func renderStrong(children: [InlineNode]) {
+    @_optimize(speed)
+    func renderStrong(children: [InlineNode]) {
         let savedAttributes = self.attributes
         self.attributes = self.textStyles.strong.mergingAttributes(self.attributes)
         
@@ -129,7 +145,8 @@ private struct AttributedStringInlineRenderer {
         self.attributes = savedAttributes
     }
     
-    private mutating func renderStrikethrough(children: [InlineNode]) {
+    @_optimize(speed)
+    func renderStrikethrough(children: [InlineNode]) {
         let savedAttributes = self.attributes
         self.attributes = self.textStyles.strikethrough.mergingAttributes(self.attributes)
         
@@ -140,7 +157,8 @@ private struct AttributedStringInlineRenderer {
         self.attributes = savedAttributes
     }
     
-    private mutating func renderLink(destination: String, children: [InlineNode]) {
+    @_optimize(speed)
+    func renderLink(destination: String, children: [InlineNode]) {
         let savedAttributes = self.attributes
         self.attributes = self.textStyles.link.mergingAttributes(self.attributes)
         self.attributes.link = URL(string: destination, relativeTo: self.baseURL)
@@ -152,13 +170,16 @@ private struct AttributedStringInlineRenderer {
         self.attributes = savedAttributes
     }
     
-    private mutating func renderImage(source: String, children: [InlineNode]) {
+    func renderImage(source: String, children: [InlineNode]) {
+        assertionFailure()
         // AttributedString does not support images
     }
 }
 
 extension TextStyle {
-    fileprivate func mergingAttributes(
+    @_optimize(speed)
+    @_transparent
+    func mergingAttributes(
         _ attributes: AttributeContainer
     ) -> AttributeContainer {
         var newAttributes = attributes

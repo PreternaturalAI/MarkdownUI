@@ -25,11 +25,9 @@ struct TextStyleAttributesReader<Content: View>: View {
         
         return result
     }
-
+    
     init(
-        @ViewBuilder content: @escaping (
-            _ attributes: AttributeContainer
-        ) -> Content
+        @ViewBuilder content: @escaping (_ attributes: AttributeContainer ) -> Content
     ) {
         self.content = content
     }

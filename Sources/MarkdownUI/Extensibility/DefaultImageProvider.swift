@@ -1,4 +1,8 @@
-import SwiftUI
+//
+// Copyright (c) Vatsal Manot
+//
+
+import SwiftUIX
 
 /// The default image provider, which loads images from the network.
 public struct DefaultImageProvider: ImageProvider {

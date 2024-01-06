@@ -2,23 +2,33 @@
 // Copyright (c) Vatsal Manot
 //
 
+@_spi(Internal) import SwiftUIX
 import Foundation
+
+
 @_implementationOnly import cmark_gfm
 
 extension Array where Element == BlockNode {
+    @_optimize(speed)
+    @_transparent
     init(markdown: String) {
         let blocks = UnsafeNode.parseMarkdown(markdown) { document in
             document.children.compactMap(BlockNode.init(unsafeNode:))
         }
-        self.init(blocks ?? .init())
+        
+        self = Self(blocks ?? .init())
     }
     
+    @_optimize(speed)
+    @_transparent
     func renderMarkdown() -> String {
         UnsafeNode.makeDocument(self) { document in
             String(cString: cmark_render_commonmark(document, CMARK_OPT_DEFAULT, 0))
         } ?? ""
     }
     
+    @_optimize(speed)
+    @_transparent
     func renderPlainText() -> String {
         UnsafeNode.makeDocument(self) { document in
             String(cString: cmark_render_plaintext(document, CMARK_OPT_DEFAULT, 0))
@@ -27,6 +37,8 @@ extension Array where Element == BlockNode {
 }
 
 extension BlockNode {
+    @_optimize(speed)
+    @_transparent
     fileprivate init?(unsafeNode: UnsafeNode) {
         switch unsafeNode.nodeType {
             case .blockquote:
@@ -80,19 +92,25 @@ extension BlockNode {
 }
 
 extension RawListItem {
+    @_optimize(speed)
+    @_transparent
     fileprivate init(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .item else {
             fatalError("Expected a list item but got a '\(unsafeNode.nodeType)' instead.")
         }
+        
         self.init(children: unsafeNode.children.compactMap(BlockNode.init(unsafeNode:)))
     }
 }
 
 extension RawTaskListItem {
+    @_optimize(speed)
+    @_transparent
     fileprivate init(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .taskListItem || unsafeNode.nodeType == .item else {
             fatalError("Expected a list item but got a '\(unsafeNode.nodeType)' instead.")
         }
+        
         self.init(
             isCompleted: unsafeNode.isTaskListItemChecked,
             children: unsafeNode.children.compactMap(BlockNode.init(unsafeNode:))
@@ -101,24 +119,32 @@ extension RawTaskListItem {
 }
 
 extension RawTableRow {
+    @_optimize(speed)
+    @_transparent
     fileprivate init(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .tableRow || unsafeNode.nodeType == .tableHead else {
             fatalError("Expected a table row but got a '\(unsafeNode.nodeType)' instead.")
         }
+        
         self.init(cells: unsafeNode.children.map(RawTableCell.init(unsafeNode:)))
     }
 }
 
 extension RawTableCell {
+    @_optimize(speed)
+    @_transparent
     fileprivate init(unsafeNode: UnsafeNode) {
         guard unsafeNode.nodeType == .tableCell else {
             fatalError("Expected a table cell but got a '\(unsafeNode.nodeType)' instead.")
         }
+        
         self.init(content: unsafeNode.children.compactMap(InlineNode.init(unsafeNode:)))
     }
 }
 
 extension InlineNode {
+    @_optimize(speed)
+    @_transparent
     fileprivate init?(unsafeNode: UnsafeNode) {
         switch unsafeNode.nodeType {
             case .text:

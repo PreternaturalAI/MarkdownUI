@@ -38,7 +38,6 @@ struct ParagraphView: View {
             imageFlow
         } else {
             InlineText(content)
-                .equatable()
         }
     }
 }

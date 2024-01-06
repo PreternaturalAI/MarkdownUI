@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 /// The appearance of a text inline in a Markdown view.

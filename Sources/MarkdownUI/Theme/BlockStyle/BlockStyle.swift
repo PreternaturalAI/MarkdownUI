@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 /// A type that applies a custom appearance to specific types of blocks in a Markdown view.

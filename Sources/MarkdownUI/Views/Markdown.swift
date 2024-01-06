@@ -28,6 +28,7 @@ public struct Markdown: View {
         .textStyle(self.text)
         .environment(\.baseURL, self.baseURL)
         .environment(\.imageBaseURL, self.imageBaseURL)
+        ._geometryGroup(.if(.available))
     }
 }
 

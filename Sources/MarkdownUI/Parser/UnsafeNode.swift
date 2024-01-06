@@ -10,56 +10,82 @@ typealias UnsafeNode = UnsafeMutablePointer<cmark_node>
 extension UnsafeNode {
     var nodeType: NodeType {
         let typeString = String(cString: cmark_node_get_type_string(self))
+        
         guard let nodeType = NodeType(rawValue: typeString) else {
             fatalError("Unknown node type '\(typeString)' found.")
         }
+        
         return nodeType
     }
     
+    @_optimize(speed)
+    @_transparent
     var children: UnsafeNodeSequence {
         .init(cmark_node_first_child(self))
     }
     
+    @_optimize(speed)
+    @_transparent
     var literal: String? {
         cmark_node_get_literal(self).map(String.init(cString:))
     }
     
+    @_optimize(speed)
+    @_transparent
     var url: String? {
         cmark_node_get_url(self).map(String.init(cString:))
     }
     
+    @_optimize(speed)
+    @_transparent
     var isTaskListItem: Bool {
         self.nodeType == .taskListItem
     }
     
+    @_optimize(speed)
+    @_transparent
     var listType: cmark_list_type {
         cmark_node_get_list_type(self)
     }
     
+    @_optimize(speed)
+    @_transparent
     var listStart: Int {
         Int(cmark_node_get_list_start(self))
     }
     
+    @_optimize(speed)
+    @_transparent
     var isTaskListItemChecked: Bool {
         cmark_gfm_extensions_get_tasklist_item_checked(self)
     }
     
+    @_optimize(speed)
+    @_transparent
     var isTightList: Bool {
         cmark_node_get_list_tight(self) != 0
     }
     
+    @_optimize(speed)
+    @_transparent
     var fenceInfo: String? {
         cmark_node_get_fence_info(self).map(String.init(cString:))
     }
     
+    @_optimize(speed)
+    @_transparent
     var headingLevel: Int {
         Int(cmark_node_get_heading_level(self))
     }
     
+    @_optimize(speed)
+    @_transparent
     var tableColumns: Int {
         Int(cmark_gfm_extensions_get_table_columns(self))
     }
     
+    @_optimize(speed)
+    @_transparent
     var tableAlignments: [RawTableColumnAlignment] {
         (0..<self.tableColumns).map { column in
             let ascii = cmark_gfm_extensions_get_table_alignments(self)[column]
@@ -69,6 +95,8 @@ extension UnsafeNode {
         }
     }
     
+    @_optimize(speed)
+    @_transparent
     static func parseMarkdown<ResultType>(
         _ markdown: String,
         body: (UnsafeNode) throws -> ResultType
@@ -206,23 +234,37 @@ extension UnsafeNode {
         return node
     }
     
-    static func make(_ tableRow: RawTableRow) -> UnsafeNode? {
+    @_optimize(speed)
+    @_transparent
+    static func make(
+        _ tableRow: RawTableRow
+    ) -> UnsafeNode? {
         guard let table = cmark_find_syntax_extension("table"),
               let node = cmark_node_new_with_ext(CMARK_NODE_TABLE_ROW, table)
         else {
             return nil
         }
+        
         tableRow.cells.compactMap(UnsafeNode.make).forEach { cmark_node_append_child(node, $0) }
+     
         return node
     }
     
-    static func make(_ tableCell: RawTableCell) -> UnsafeNode? {
+    @_optimize(speed)
+    @_transparent
+    static func make(
+        _ tableCell: RawTableCell
+    ) -> UnsafeNode? {
         guard let table = cmark_find_syntax_extension("table"),
               let node = cmark_node_new_with_ext(CMARK_NODE_TABLE_CELL, table)
         else {
             return nil
         }
-        tableCell.content.compactMap(UnsafeNode.make).forEach { cmark_node_append_child(node, $0) }
+        
+        tableCell.content.compactMap(UnsafeNode.make).forEach {
+            cmark_node_append_child(node, $0)
+        }
+        
         return node
     }
     
@@ -310,28 +352,44 @@ enum NodeType: String {
 }
 
 struct UnsafeNodeSequence: Sequence {
+    @frozen
+    @usableFromInline
     struct Iterator: IteratorProtocol {
-        private var node: UnsafeNode?
+        var node: UnsafeNode?
         
+        @_optimize(speed)
+        @_transparent
         init(_ node: UnsafeNode?) {
             self.node = node
         }
         
+        @_optimize(speed)
+        @_transparent
         mutating func next() -> UnsafeNode? {
-            guard let node else { return nil }
-            defer { self.node = cmark_node_next(node) }
+            guard let node else {
+                return nil
+            }
+            
+            defer {
+                self.node = cmark_node_next(node)
+            }
+            
             return node
         }
     }
     
-    private let node: UnsafeNode?
+    @usableFromInline
+    let node: UnsafeNode?
     
+    @usableFromInline
+    @_optimize(speed)
+    @_transparent
     init(_ node: UnsafeNode?) {
         self.node = node
     }
     
     func makeIterator() -> Iterator {
-        .init(self.node)
+        Iterator(self.node)
     }
 }
 
@@ -345,6 +403,7 @@ class CustomCMarkNode {
 }
 
 extension UnsafeNode {
+    @_optimize(speed)
     static func traverse(
         node customNode: CustomCMarkNode,
         source: String
@@ -375,6 +434,9 @@ extension UnsafeNode {
         return customNode
     }
     
+    
+    @_optimize(speed)
+    @_transparent
     static func utf16Range(
         fromLine startLine: Int,
         startColumn: Int,

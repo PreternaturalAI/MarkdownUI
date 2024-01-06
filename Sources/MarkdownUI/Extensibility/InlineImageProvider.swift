@@ -1,4 +1,8 @@
-import SwiftUI
+//
+// Copyright (c) Vatsal Manot
+//
+
+import SwiftUIX
 
 /// A type that loads images that are displayed within a line of text.
 ///

@@ -5,6 +5,7 @@
 import Foundation
 
 extension Sequence where Element == InlineNode {
+    @_transparent
     func renderPlainText() -> String {
         self.collect { inline in
             switch inline {

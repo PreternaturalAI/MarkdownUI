@@ -4,6 +4,8 @@
 
 import Foundation
 
+@frozen
+@usableFromInline
 struct InlineTextStyles: Equatable {
     let code: AnyTextStyle
     let emphasis: AnyTextStyle

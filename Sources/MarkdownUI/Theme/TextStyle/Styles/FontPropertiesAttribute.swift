@@ -1,7 +1,16 @@
-import Foundation
+//
+// Copyright (c) Vatsal Manot
+//
 
+import SwiftUI
+
+@frozen
+@usableFromInline
 enum FontPropertiesAttribute: AttributedStringKey {
+    @usableFromInline
     typealias Value = FontProperties
+    
+    @usableFromInline
     static let name = "fontProperties"
 }
 
@@ -10,6 +19,8 @@ extension AttributeScopes {
         MarkdownUIAttributes.self
     }
     
+    @frozen
+    @usableFromInline
     struct MarkdownUIAttributes: AttributeScope {
         let swiftUI: SwiftUIAttributes
         let fontProperties: FontPropertiesAttribute
@@ -20,11 +31,15 @@ extension AttributeDynamicLookup {
     subscript<T: AttributedStringKey>(
         dynamicMember keyPath: KeyPath<AttributeScopes.MarkdownUIAttributes, T>
     ) -> T {
-        return self[T.self]
+        @_transparent
+        get {
+            return self[T.self]
+        }
     }
 }
 
 extension AttributedString {
+    @_transparent
     func resolvingFonts() -> AttributedString {
         var output = self
         

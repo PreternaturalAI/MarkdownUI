@@ -12,9 +12,7 @@ struct InlineText: Equatable, View {
     }
     
     var body: some View {
-        _CacheViewAgainstValue(inlines) {
-            _InlineText(inlines)
-        }
+        _InlineText(inlines)
     }
 }
 

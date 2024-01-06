@@ -1,3 +1,7 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUIX
 
 /// An image provider that loads images from resources located in an app or a module.

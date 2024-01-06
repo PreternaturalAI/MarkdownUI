@@ -1,7 +1,11 @@
+//
+// Copyright (c) Vatsal Manot
+//
+
 import SwiftUI
 
 /// A text style that sets the strikethrough line style of the text.
-public struct StrikethroughStyle: TextStyle {
+public struct StrikethroughStyle: Hashable, TextStyle {
     private let lineStyle: Text.LineStyle?
     
     /// Creates a strikethrough text style.
@@ -10,7 +14,9 @@ public struct StrikethroughStyle: TextStyle {
         self.lineStyle = lineStyle
     }
     
-    public func _collectAttributes(in attributes: inout AttributeContainer) {
+    public func _collectAttributes(
+        in attributes: inout AttributeContainer
+    ) {
         attributes.strikethroughStyle = self.lineStyle
     }
 }

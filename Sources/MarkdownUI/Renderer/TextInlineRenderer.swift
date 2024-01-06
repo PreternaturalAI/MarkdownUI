@@ -5,25 +5,30 @@
 import SwiftUI
 
 extension Sequence where Element == InlineNode {
+    @_optimize(speed)
+    @_transparent
     func renderText(
         baseURL: URL?,
         textStyles: InlineTextStyles,
         images: [String: Image],
         attributes: AttributeContainer
     ) -> Text {
-        var renderer = TextInlineRenderer(
+        let renderer = TextInlineRenderer(
             baseURL: baseURL,
             textStyles: textStyles,
             images: images,
             attributes: attributes
         )
+        
         renderer.render(self)
+        
         return renderer.result
     }
 }
 
-private struct TextInlineRenderer {
-    var result = Text("")
+@usableFromInline
+final class TextInlineRenderer {
+    var result = Text(verbatim: "")
     
     private let baseURL: URL?
     private let textStyles: InlineTextStyles
@@ -31,6 +36,7 @@ private struct TextInlineRenderer {
     private let attributes: AttributeContainer
     private var shouldSkipNextWhitespace = false
     
+    @usableFromInline
     init(
         baseURL: URL?,
         textStyles: InlineTextStyles,
@@ -43,7 +49,8 @@ private struct TextInlineRenderer {
         self.attributes = attributes
     }
     
-    mutating func render<S: Sequence>(
+    @inline(__always)
+    func render<S: Sequence>(
         _ inlines: S
     ) where S.Element == InlineNode {
         for inline in inlines {
@@ -51,7 +58,8 @@ private struct TextInlineRenderer {
         }
     }
     
-    private mutating func render(_ inline: InlineNode) {
+    @_optimize(speed)
+    func render(_ inline: InlineNode) {
         switch inline {
             case .text(let content):
                 self.renderText(content)
@@ -66,7 +74,9 @@ private struct TextInlineRenderer {
         }
     }
     
-    private mutating func renderText(_ text: String) {
+    @_optimize(speed)
+    @inline(__always)
+    func renderText(_ text: String) {
         var text = text
         
         if self.shouldSkipNextWhitespace {
@@ -77,7 +87,9 @@ private struct TextInlineRenderer {
         self.defaultRender(.text(text))
     }
     
-    private mutating func renderSoftBreak() {
+    @_optimize(speed)
+    @inline(__always)
+    func renderSoftBreak() {
         if self.shouldSkipNextWhitespace {
             self.shouldSkipNextWhitespace = false
         } else {
@@ -85,7 +97,9 @@ private struct TextInlineRenderer {
         }
     }
     
-    private mutating func renderHTML(_ html: String) {
+    @_optimize(speed)
+    @inline(__always)
+    func renderHTML(_ html: String) {
         let tag = HTMLTag(html)
         
         switch tag?.name.lowercased() {
@@ -97,13 +111,17 @@ private struct TextInlineRenderer {
         }
     }
     
-    private mutating func renderImage(_ source: String) {
+    @_optimize(speed)
+    @inline(__always)
+    func renderImage(_ source: String) {
         if let image = self.images[source] {
             self.result = self.result + Text(image)
         }
     }
     
-    private mutating func defaultRender(
+    @_optimize(speed)
+    @inline(__always)
+    func defaultRender(
         _ inline: InlineNode
     ) {
         self.result = self.result + Text(
